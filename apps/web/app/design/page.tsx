@@ -1,8 +1,7 @@
-import BottomNavigation from "@/src/widgets/Navigation/ui/BottomNavigation";
-import React from "react";
+import DatePicker from '@/src/entities/plan/ui/date-picker';
 
 const page = () => {
-  return <BottomNavigation />;
+  return <DatePicker />;
 };
 
 export default page;
