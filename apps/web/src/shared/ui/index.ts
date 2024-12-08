@@ -1,3 +1,7 @@
+export * from './button';
+export * from './tabs';
+export * from './sheet';
+
 // Buttons
 export { Button, buttonVariants } from './button';
 export { PrimaryButton } from './buttons/PrimaryButton';
@@ -27,3 +31,4 @@ export { ItemCard } from './ItemCard';
 export { Textarea } from './textArea';
 export { Tabs, TabsList, TabsTrigger, TabsContent } from './tabs';
 export { Input } from './input';
+

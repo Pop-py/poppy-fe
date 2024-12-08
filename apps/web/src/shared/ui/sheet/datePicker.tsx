@@ -1,16 +1,15 @@
 'use client';
-import { Calendar } from '@/src/shared/ui/calendar';
-import React, { useState } from 'react';
 import { ko } from 'date-fns/locale';
 import { format } from 'date-fns';
+import { Calendar } from './calendar';
 
-const DatePicker = () => {
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const onSelect = (date: Date | undefined) => {
-    if (!date) return;
-    setSelectedDate(date);
-  };
+type Props = {
+  selectedDate: Date | undefined;
+  onSelect: (date: Date | undefined) => void;
+};
 
+const DatePicker = (props: Props) => {
+  const { selectedDate, onSelect } = props;
   return (
     <Calendar
       mode="single"
@@ -19,7 +18,7 @@ const DatePicker = () => {
       disabled={date => date < new Date(new Date().setHours(0, 0, 0, 0))}
       classNames={{
         day_today: 'text-gray-800',
-        day_selected: 'bg-blue-500 !text-white rounded-xl',
+        day_selected: 'bg-blue-500 text-white rounded-xl',
       }}
       locale={ko}
       formatters={{
