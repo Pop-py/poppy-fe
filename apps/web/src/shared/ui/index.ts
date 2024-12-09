@@ -1,3 +1,7 @@
+export * from './button';
+export * from './tabs';
+export * from './sheet';
+
 // Buttons
 export { Button, buttonVariants } from './button';
 export { PrimaryButton } from './buttons/PrimaryButton';
@@ -35,8 +39,6 @@ export {
   AlertDialogCancel,
 } from './dialog/Dialog';
 
-export { Calendar } from './calendar';
-export { DatePicker } from './datePicker';
 export { ItemCard } from './ItemCard';
 export { Textarea } from './textArea';
 export { Tabs, TabsList, TabsTrigger, TabsContent } from './tabs';

@@ -45,3 +45,7 @@ export { ClockOutlined };
 // Chips
 import Delete from './chips/delete.svg';
 export { Delete };
+
+// Sheets
+import star from './sheet/star.png';
+export { star };
