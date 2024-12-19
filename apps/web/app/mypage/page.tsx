@@ -15,6 +15,10 @@ const Page = (props: Props) => {
     router.push('/mypage/reviews');
   };
 
+  const editClickHandler = () => {
+    router.push('/mypage/edit');
+  };
+
   const name = '가나다';
   const email = 'asdf1234@gmail.com';
   const reviewsCount = 7;
@@ -31,7 +35,9 @@ const Page = (props: Props) => {
             <div className="text-b3_com text-gray-600">{email}</div>
           </div>
           <div>
-            <SecondaryButton size="sm">프로필 수정</SecondaryButton>
+            <SecondaryButton size="sm" onClick={editClickHandler}>
+              프로필 수정
+            </SecondaryButton>
           </div>
         </div>
       </div>

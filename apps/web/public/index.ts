@@ -17,6 +17,8 @@ import PinLife from './icons/PinLife.svg';
 import PinGoods from './icons/PinGoods.svg';
 import PinArt from './icons/PinArt.svg';
 import Setting from './icons/setting.svg';
+import Kebab from './icons/kebab.svg';
+import Camera from './icons/ic-camera.svg';
 export {
   MyPage,
   Home,
@@ -36,6 +38,8 @@ export {
   PinGoods,
   PinArt,
   Setting,
+  Kebab,
+  Camera,
 };
 
 import ChevronLeft from './datePicker/chevronLeft.svg';

@@ -7,6 +7,8 @@ import { useRouter } from 'next/navigation';
 type Props = {
   title: string;
   edit: boolean;
+  onEdit?: () => void;
+  editText?: string;
 };
 
 export const ChevronHeader = (props: Props) => {
@@ -22,8 +24,8 @@ export const ChevronHeader = (props: Props) => {
       <div className="grow text-center text-h2">{props.title}</div>
       <div className="flex w-40 justify-end items-center text-b1 text-informative">
         {props.edit ? (
-          <button>
-            <span>편집</span>
+          <button onClick={props.onEdit}>
+            <span>{props.editText}</span>
           </button>
         ) : null}
       </div>

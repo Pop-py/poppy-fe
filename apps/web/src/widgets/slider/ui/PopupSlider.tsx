@@ -29,7 +29,11 @@ export const PopupSlider = ({ showCount = false, typography = 'h2', ...props }: 
   const router = useRouter();
 
   const moreClickHandler = () => {
-    router.push(`/home/more/${props.category}`);
+    if (props.category === 'save') {
+      router.push(`/mypage/saves/`);
+    } else {
+      router.push(`/home/more/${props.category}`);
+    }
   };
 
   return (

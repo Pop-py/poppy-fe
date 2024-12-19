@@ -40,7 +40,7 @@ const LikeIconButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
       }
     };
 
-    const textColor = value > 0 ? 'text-blue-500' : 'text-gray-400';
+    const textColor = currentVariant === 'active' ? 'text-blue-500' : 'text-gray-400';
 
     return (
       <Comp
