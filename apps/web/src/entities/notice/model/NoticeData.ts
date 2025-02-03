@@ -14,13 +14,12 @@ export interface NoticeDetail {
 }
 
 export interface ActivityListItem {
-  userId: number;
-  type: string;
-  storeId: number;
-  popupStoreName: string;
-  waitingNumber: number;
-  peopleAhead?: number | null;
-  isRead: false;
-  date?: string;
+  isRead: boolean;
   message: string;
+  noticeDate: string;
+  noticeTime: string;
+  popupStoreId: number;
+  popupStoreName: string;
+  type: string;
+  userId: number;
 }

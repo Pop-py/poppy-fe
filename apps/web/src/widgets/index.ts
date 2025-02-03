@@ -26,7 +26,6 @@ export {
   getPlannedList,
   getListByCategory,
   getListByName,
-  getScrapList,
 } from './home';
 export type { PopupListItem } from './home';
 
@@ -36,3 +35,9 @@ export type { ItemCardData } from './slider';
 
 // waiting
 export { registerUserWaiting } from './detail/api/waitingApi';
+
+// detail
+export { fetchPopupStoreDetail } from './detail';
+
+// review
+export { createReview, getReview, reviewLike } from './review';

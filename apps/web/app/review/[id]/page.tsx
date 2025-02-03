@@ -2,11 +2,10 @@
 
 import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { SubHeader } from '@/src/widgets';
+import { createReview, SubHeader } from '@/src/widgets';
 import { IconButton, PrimaryButton, Textarea } from '@/src/shared';
 import { useState, useRef, useEffect } from 'react';
 import { Camera, ImageDelete } from '@/public';
-import { createReview } from '@/src/widgets/review/api/reviewCreateApi';
 import { useLoginStore, useUserInfo } from 'store/login/loginStore';
 
 export default function Page() {
@@ -60,7 +59,7 @@ export default function Page() {
     formData.append('rating', star.toString());
     try {
       await createReview(Number(id), formData, token as string);
-      router.push(`detail/${id}`);
+      router.push(`/detail/${id}`);
     } catch (error) {
       console.error('리뷰 작성 실패:', error);
     }
@@ -129,7 +128,7 @@ export default function Page() {
                       className="object-cover w-full h-full rounded-4"
                     />
                     <button
-                      className="absolute top-[4px] right-[4px]   "
+                      className="absolute top-[4px] right-[4px]"
                       type="button"
                       onClick={() => handleRemoveImage(index)}>
                       <ImageDelete />
