@@ -18,6 +18,7 @@ export default function Page() {
   const [textareaValue, setTextareaValue] = useState('');
   const [selectedImages, setSelectedImages] = useState<string[]>([]);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [deleteImageIds, setDeleteImageIds] = useState<string[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [star, setStar] = useState(0);
   const router = useRouter();
@@ -29,6 +30,7 @@ export default function Page() {
       setTextareaValue(data.content);
       setStar(data.rating);
       setSelectedImages(data.imageUrls);
+      // setDeleteImageIds(data.imageIds);
       for (let i = 0; i < data.imageUrls.length; i++) {
         selectedFiles.push(new File([], '')); // 빈 파일 객체 생성
       }
@@ -59,8 +61,11 @@ export default function Page() {
   };
 
   const handleRemoveImage = (index: number) => {
-    setSelectedImages(prevImages => prevImages.filter((_, i) => i !== index));
-    setSelectedFiles(prevFiles => prevFiles.filter((_, i) => i !== index));
+    if (review.data) {
+      if (!selectedFiles[index].name) deleteImageIds.push(review.data.imageIds[index].toString());
+      setSelectedImages(prevImages => prevImages.filter((_, i) => i !== index));
+      setSelectedFiles(prevFiles => prevFiles.filter((_, i) => i !== index));
+    }
   };
 
   const handleSubmit = async () => {
@@ -68,7 +73,11 @@ export default function Page() {
     const formData = new FormData();
 
     selectedFiles.forEach((file: File) => {
-      if (file.size > 0) formData.append('images', file);
+      if (file.name) formData.append('images', file);
+    });
+
+    deleteImageIds.forEach(imageId => {
+      formData.append('deleteImageIds', imageId);
     });
 
     formData.append('content', textareaValue);
@@ -82,8 +91,6 @@ export default function Page() {
   };
 
   const isButtonEnabled = textareaValue.length > 0 && star > 0;
-
-  console.log(selectedFiles);
 
   return (
     <div className="flex flex-col items-center w-full h-full px-[16px]">

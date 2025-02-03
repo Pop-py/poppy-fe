@@ -1,3 +1,5 @@
+import { ReviewListItem } from '../model';
+
 export const createReview = async (
   popupStoreId: number,
   formData: FormData,
@@ -50,7 +52,7 @@ export const updateReview = async (
   }
 };
 
-export const getReview = async (id: number, accessToken: string): Promise<any> => {
+export const getReview = async (id: number, accessToken: string): Promise<ReviewListItem> => {
   const options = {
     method: 'GET',
     headers: {
