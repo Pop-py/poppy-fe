@@ -1,2 +1,2 @@
-export { getScrapList } from './api/mypageAPI';
-export { changeNickName } from './api/mypageAPI';
+export { getScrapList, changeNickName, getReviewList, deleteReview } from './api/mypageAPI';
+export type { ReviewListItem } from './model/mypageData';

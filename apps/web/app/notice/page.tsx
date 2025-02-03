@@ -1,18 +1,29 @@
 'use client';
 
-import { ActivityListItem, getNotices, NoticeListItem } from '@/src/entities';
+import { ActivityListItem, getActivityNotices, getNotices, NoticeListItem } from '@/src/entities';
 import { IconButton, Skeleton, Tabs, TabsContent, TabsList, TabsTrigger } from '@/src/shared';
 import { ChevronHeader, SubHeader } from '@/src/widgets';
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useQuery } from 'react-query';
+import { useQueries, useQuery } from 'react-query';
+import { useLoginStore, useUserInfo } from 'store/login/loginStore';
 
-type Props = {};
-
-const Page = (props: Props) => {
+const Page = () => {
   const router = useRouter();
+  const { userInfoData } = useUserInfo();
+  const { token } = useLoginStore();
 
-  const { data, error, isLoading } = useQuery(['getNotices'], getNotices);
+  const queries = useQueries([
+    {
+      queryKey: ['getNotices'],
+      queryFn: getNotices,
+    },
+    {
+      queryKey: ['getActivityNotices'],
+      queryFn: () => getActivityNotices(userInfoData.userId, token!),
+      // enabled: !!token && !!userInfoData.userId,
+    },
+  ]);
 
   const NoticeItem = (item: NoticeListItem) => (
     <div
@@ -30,7 +41,7 @@ const Page = (props: Props) => {
     const router = useRouter();
 
     const handleClick = () => {
-      if (item.type === 'RESERVATION_confirm') {
+      if (item.type === 'RESERVATION') {
         router.push(`/book/${item.userId}`);
       }
     };
@@ -44,24 +55,12 @@ const Page = (props: Props) => {
             <div className="flex flex-col ">
               <span className="text-blue-600 text-h4">[{item.popupStoreName}]</span>
               <span className="text-gray-800 text-b1">{item.message}</span>
-              {item.type === 'RESERVATION_confirm' && (
-                <div className="bg-gray-50 rounded-4 text-b3_com p-[12px]  mt-[8px]">
-                  <div className="flex gap-x-[8px]">
-                    <p className="text-gray-400  min-w-[23px] ">일정</p>
-                    <p className="text-gray-700">{item.date}</p>
-                  </div>
-                  <div className="flex gap-x-[8px]">
-                    <p className="text-gray-400  min-w-[23px]">인원</p>
-                    <p className="text-gray-700">{item.peopleAhead}명</p>
-                  </div>
-                </div>
-              )}
               {item.type === 'TEAMS_AHEAD' && (
                 <span className="text-gray-500 text-b5">잠시 후 입장 예정이니, 매장 앞에서 대기해 주세요.</span>
               )}
             </div>
             <div>
-              <span className="text-gray-300 text-c2">{item.date}</span>
+              <span className="text-gray-300 text-c2">{`${item.noticeDate}. ${item.noticeTime}`}</span>
             </div>
           </div>
         </div>
@@ -81,7 +80,7 @@ const Page = (props: Props) => {
         </div>
         <TabsContent value="notifications" className="h-full my-0 overflow-y-scroll">
           <div className="px-16 py-12 bg-gray-50">
-            {isLoading
+            {queries[0].isLoading
               ? Array.from({ length: 8 }, (_, idx) => (
                   <div key={`SKEL_${idx}`} className="p-12 mb-8 bg-white border border-gray-100 rounded">
                     <div>
@@ -90,7 +89,7 @@ const Page = (props: Props) => {
                     </div>
                   </div>
                 ))
-              : data?.map((item, idx) => (
+              : queries[0].data?.map((item, idx) => (
                   <NoticeItem
                     key={`ITEM_${idx}`}
                     id={item.id}
@@ -104,21 +103,39 @@ const Page = (props: Props) => {
         </TabsContent>
         <TabsContent value="activities" className="h-full my-0 overflow-y-scroll">
           <div className="px-16 py-12 bg-gray-50">
-            {}
-            {activitiesData.map((item, idx) => (
-              <ActivityItem
-                key={`ITEM_${idx}`}
-                userId={item.userId}
-                storeId={item.storeId}
-                popupStoreName={item.popupStoreName}
-                type={item.type}
-                message={item.message}
-                date={item.date}
-                isRead={item.isRead}
-                peopleAhead={item.peopleAhead}
-                waitingNumber={item.waitingNumber}
-              />
-            ))}
+            {queries[1].isLoading
+              ? Array.from({ length: 8 }, (_, idx) => (
+                  <div
+                    key={`SKELETON_${idx}`}
+                    className="flex flex-col p-12 mb-8 bg-white border border-gray-100 rounded gap-y-[8px]">
+                    <div className="flex gap-x-[12px]">
+                      <IconButton size="xlg" icon="ic-noti-cal" />
+                      <div className="flex flex-col gap-y-[16px] w-full ">
+                        <div className="flex flex-col justify-around h-40">
+                          <Skeleton className="h-16 w-[200px]" />
+                          <Skeleton className="h-16 w-[200px]" />
+                        </div>
+                        <div className="h-16">
+                          <Skeleton className="h-[12px] w-[150px]" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              : queries[1].data &&
+                queries[1].data.map((item, idx) => (
+                  <ActivityItem
+                    key={`ITEM_${idx}`}
+                    userId={item.userId}
+                    popupStoreId={item.popupStoreId}
+                    popupStoreName={item.popupStoreName}
+                    type={item.type}
+                    message={item.message}
+                    noticeDate={item.noticeDate}
+                    noticeTime={item.noticeTime}
+                    isRead={item.isRead}
+                  />
+                ))}
           </div>
         </TabsContent>
       </Tabs>
@@ -127,50 +144,3 @@ const Page = (props: Props) => {
 };
 
 export default Page;
-
-const activitiesData: Array<ActivityListItem> = [
-  {
-    userId: 1,
-    type: 'RESERVATION_confirm',
-    storeId: 1,
-    popupStoreName: '[오둥이의 아르바이트]',
-    waitingNumber: 0,
-    peopleAhead: 2,
-    isRead: false,
-    date: '2024. 11. 18(월) 오후 1:30',
-    message: '예약이 확정되었습니다.',
-  },
-  {
-    userId: 1,
-    type: 'RESERVATION_cancel',
-    storeId: 2,
-    popupStoreName: '[롯데 크리스마스 마켓 2024]',
-    waitingNumber: 4,
-    peopleAhead: null,
-    isRead: false,
-    message: '예약이 취소되었습니다.',
-    date: '2024. 11. 18(월) 오후 1:30',
-  },
-  {
-    userId: 1,
-    type: 'NOTICE',
-    storeId: 3,
-    popupStoreName: '팝업스토어',
-    waitingNumber: 4,
-    peopleAhead: null,
-    isRead: false,
-    message: '스토어가 오픈되었습니다.',
-    date: '2024. 11. 18(월) 오후 1:30',
-  },
-  {
-    userId: 1,
-    type: 'TEAMS_AHEAD',
-    storeId: 4,
-    popupStoreName: '팝업스토어',
-    waitingNumber: 4,
-    peopleAhead: null,
-    isRead: false,
-    message: '앞으로 1팀 남았습니다.',
-    date: '2024. 11. 18(월) 오후 1:30',
-  },
-];

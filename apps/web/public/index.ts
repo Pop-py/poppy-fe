@@ -21,6 +21,8 @@ import ArrowRight from './icons/arrow_r_sm.svg';
 import Kebab from './icons/kebab.svg';
 import Camera from './icons/ic-camera.svg';
 import ImageDelete from './icons/ic-delete.svg';
+import Star from './icons/ic-star.svg';
+import StarActive from './icons/ic-star-active.svg';
 
 export {
   MyPage,
@@ -45,6 +47,8 @@ export {
   Kebab,
   Camera,
   ImageDelete,
+  Star,
+  StarActive,
 };
 
 import ChevronLeft from './datePicker/chevronLeft.svg';

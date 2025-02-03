@@ -138,25 +138,3 @@ export const getListByName = async (keyword: string, accessToken?: string): Prom
     throw new Error('Failed to fetch data');
   }
 };
-
-export const getScrapList = async (token: string): Promise<Array<PopupListItem>> => {
-  try {
-    const options = {
-      method: 'GET',
-      headers: {
-        Authorization: 'Bearer ' + token,
-      },
-    };
-
-    const response = await fetch(`${process.env.NEXT_PUBLIC_CLIENT_URL}/scraps?sortType=RECENT_SAVED`, options);
-    const result = await response.json();
-
-    if (result && result.data) {
-      return result.data;
-    }
-
-    throw new Error('Response does not contain a data field');
-  } catch (e) {
-    throw new Error('Failed to fetch data');
-  }
-};

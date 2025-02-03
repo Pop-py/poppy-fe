@@ -1,163 +1,234 @@
-import { IconButton, LikeIconButton } from '@/src/shared';
-import { ChevronHeader } from '@/src/widgets';
+'use client';
+
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+  BottomSheet,
+  BottomSheetContent,
+  BottomSheetHeader,
+  BottomSheetTitle,
+  Hr,
+  IconButton,
+  LikeIconButton,
+  Skeleton,
+} from '@/src/shared';
+import { ChevronHeader, fetchPopupStoreDetail } from '@/src/widgets';
 import React from 'react';
-import Image from "next/legacy/image";
+import Image from 'next/legacy/image';
 import { Sort } from '@/public';
+import { useLoginStore } from 'store/login/loginStore';
+import { useQueries, useQuery } from 'react-query';
+import { deleteReview, getReviewList } from '@/src/entities';
+import { StarActive } from '@/public';
+import { toast } from '@/src/shared/hooks/use-toast';
 
-type Props = {};
+const Page = () => {
+  const { token } = useLoginStore();
 
-const Page = (props: Props) => {
+  const [isBottomSheetOpen, setIsBottomSheetOpen] = React.useState(false);
+  const [isDialogOpen, setIsDialogOpen] = React.useState(false);
+  const selectedReviewId = React.useRef<number>(0);
+
+  const { data, isLoading } = useQuery(['getReviewList', token], () => getReviewList(token!), { enabled: !!token });
+
+  const handleDeleteReview = async () => {
+    if (token) {
+      await deleteReview(selectedReviewId.current, token).then(result => {
+        if (result) {
+          toast({
+            variant: 'default',
+            title: '리뷰 삭제 완료',
+            description: '해당 리뷰를 삭제했습니다.',
+          });
+        } else {
+          toast({
+            variant: 'destructive',
+            title: '리뷰 삭제 실패',
+            description: '리뷰 삭제에 실패했습니다.',
+          });
+        }
+      });
+    } else {
+      toast({
+        variant: 'destructive',
+        title: '리뷰 삭제 실패',
+        description: '로그인 세션이 만료되었습니다.',
+      });
+    }
+    setIsBottomSheetOpen(false);
+  };
+
   return (
     <div className="flex flex-col h-full">
       <div className="relative bg-white">
         <ChevronHeader title="작성한 리뷰" edit={false} />
       </div>
       <div className="overflow-y-auto">
-        <div className="flex justify-end mt-4 px-16">
+        <div className="flex justify-end px-16 mt-4">
           <div className="flex">
             <span>
               <Sort />
             </span>
-            <span className="text-b2 text-gray-500 ml-4">최근 등록순</span>
+            <span className="ml-4 text-gray-500 text-b2">최근 등록순</span>
           </div>
         </div>
         <div className="flex flex-col gap-y-[52px]">
-          {reviewData.map(review => (
-            <div key={review.id}>
-              {/* Popup information */}
-              <div className="px-16 flex justify-between items-center">
-                <div className="flex gap-x-8">
+          {isLoading
+            ? Array.from({ length: 5 }, (_, idx) => (
+                <div className="flex flex-col mt-16 gap-y-8" key={`SKELETON_${idx}`}>
+                  <div className="flex px-16 gap-x-8">
+                    <div>
+                      <Skeleton className="w-40 h-40" />
+                    </div>
+                    <div className="flex flex-col justify-around">
+                      <div>
+                        <Skeleton className="h-16 w-[100px]" />
+                      </div>
+                      <div>
+                        <Skeleton className="h-20 w-[250px]" />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between px-16">
+                    <div className="flex items-center">
+                      <StarActive />
+                      <Skeleton className="h-20 w-[40px]" />
+                    </div>
+                    <div>
+                      <Skeleton className="h-16 w-[100px]" />
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-y-8">
+                    <div className="flex overflow-x-auto gap-x-2">
+                      <div>
+                        <Skeleton className="h-[160px] w-[160px] ml-16" />
+                      </div>
+                      <div>
+                        <Skeleton className="h-[160px] w-[160px]" />
+                      </div>
+                      <div>
+                        <Skeleton className="h-[160px] w-[160px]" />
+                      </div>
+                      <div>
+                        <Skeleton className="h-[160px] w-[160px]" />
+                      </div>
+                      <div>
+                        <Skeleton className="h-[160px] w-[160px] mr-16" />
+                      </div>
+                    </div>
+                    <div className="px-16">
+                      <Skeleton className="w-full h-40" />
+                    </div>
+                  </div>
+                  <div className="flex w-full justify-end mt-[4px] px-[16px]">
+                    <LikeIconButton variant="inactive" value={0} />
+                  </div>
+                  <Hr variant="hairline" className="my-24" />
+                </div>
+              ))
+            : data?.map(review => (
+                <div key={review.id}>
+                  {/* Popup information */}
+                  <div className="flex items-center justify-between px-16">
+                    <div className="flex gap-x-8">
+                      <div>
+                        <Image
+                          width={40}
+                          height={40}
+                          src={'https://placehold.co/500/webp'}
+                          alt={`review-${review.id}`}
+                          className="object-cover rounded-2"
+                        />
+                      </div>
+                      <div className="flex flex-col gap-y-2">
+                        {/* <div className="text-gray-400 text-b5">{review.popupAddress}</div> */}
+                        <div className="text-gray-400 text-b5">임시 주소</div>
+                        <div className="text-gray-900 text-h4">{review.popupStoreName}</div>
+                      </div>
+                    </div>
+                    <div>
+                      <IconButton
+                        icon="kebab"
+                        onClick={() => {
+                          selectedReviewId.current = review.id;
+                          setIsBottomSheetOpen(true);
+                        }}
+                      />
+                    </div>
+                  </div>
+                  {/* Rating and Date */}
+                  <div className="flex items-center justify-between my-[8px] px-[16px]">
+                    <div className="flex items-center">
+                      <IconButton className="mr-[4px]" icon="ic-star-active" size="sm" />
+                      <p className="text-gray-900 text-h4">{review.rating.toFixed(1)}</p>
+                    </div>
+                    <p className="text-gray-300 text-b5">{review.date}</p>
+                  </div>
+
+                  {/* Image Section */}
                   <div>
-                    <Image
-                      width={40}
-                      height={40}
-                      src={'https://placehold.co/500/webp'}
-                      alt={`review-${review.id}`}
-                      className="object-cover rounded-2"
-                    />
+                    <div className="flex gap-x-[2px] overflow-auto">
+                      {review.imageUrls.map((imageSrc, index, arr) => (
+                        <Image
+                          key={index}
+                          width={160}
+                          height={160}
+                          src={imageSrc}
+                          alt={`review-${index}`}
+                          className={`w-[160px] h-[160px] object-cover ${index === 0 ? 'pl-16' : null} ${index + 1 === arr.length ? 'pr-16' : null}`}
+                        />
+                      ))}
+                    </div>
                   </div>
-                  <div className="flex flex-col gap-y-2">
-                    <div className="text-b5 text-gray-400">{review.popupAddress}</div>
-                    <div className="text-h4 text-gray-900">{review.popupName}</div>
+
+                  {/* Comment */}
+                  <div className="text-b3 px-[16px] mt-8">
+                    <span className="text-gray-800">{review.content}</span>
+                  </div>
+
+                  {/* Like Button */}
+                  <div className="flex w-full justify-end mt-[4px] px-[16px]">
+                    <LikeIconButton variant="inactive" value={review.likes} />
                   </div>
                 </div>
-                <div>
-                  <IconButton icon="kebab" />
-                </div>
-              </div>
-              {/* Rating and Date */}
-              <div className="flex items-center justify-between my-[8px] px-[16px]">
-                <div className="flex items-center">
-                  <IconButton className="mr-[4px]" icon="ic-star-active" size="sm" />
-                  <p className="text-gray-900 text-h4">{review.rating.toFixed(1)}</p>
-                </div>
-                <p className="text-gray-300 text-b5">{review.date}</p>
-              </div>
-
-              {/* Image Section */}
-              <div>
-                <div className="flex gap-x-[2px] overflow-auto">
-                  {review.images.map((imageSrc, index, arr) => (
-                    <Image
-                      key={index}
-                      width={160}
-                      height={160}
-                      src={imageSrc}
-                      alt={`review-${index}`}
-                      className={`w-[160px] h-[160px] object-cover ${index === 0 ? 'pl-16' : null} ${index + 1 === arr.length ? 'pr-16' : null}`}
-                    />
-                  ))}
-                </div>
-              </div>
-
-              {/* Comment */}
-              <div className="text-b3 px-[16px] mt-8">
-                <span className="text-gray-900">{review.username} &nbsp;</span>
-                <span className="text-gray-800">{review.comment}</span>
-              </div>
-
-              {/* Like Button */}
-              <div className="flex w-full justify-end mt-[4px] px-[16px]">
-                <LikeIconButton variant="inactive" value={review.likes} />
-              </div>
-            </div>
-          ))}
+              ))}
         </div>
         <div className="mt-bottomMargin" />
       </div>
+      <BottomSheet open={isBottomSheetOpen} onOpenChange={setIsBottomSheetOpen}>
+        <BottomSheetContent aria-describedby="bottomSheetContent" className="px-0">
+          <BottomSheetHeader className="py-16 border-b border-gray-100">
+            <BottomSheetTitle>정렬</BottomSheetTitle>
+          </BottomSheetHeader>
+          <div className="flex flex-col">
+            <div className="h-48 text-gray-800 text-b1">수정하기</div>
+            <div className="h-48 text-gray-800 text-b1" onClick={() => setIsDialogOpen(true)}>
+              삭제하기
+            </div>
+          </div>
+        </BottomSheetContent>
+      </BottomSheet>
+      <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>리뷰 삭제</AlertDialogTitle>
+            <AlertDialogDescription>선택한 리뷰를 삭제하시겠습니까?</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel />
+            <AlertDialogAction variant="warning" onClick={() => handleDeleteReview()} />
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
 
 export default Page;
-
-const reviewData = [
-  {
-    id: 1,
-    popupName: '오둥이의 아르바이트',
-    popupAddress: '서울 서초구',
-    rating: 4.0,
-    date: '24.10.19',
-    images: [
-      '/images/img-review-1.png',
-      '/images/img-review-2.png',
-      '/images/img-review-3.png',
-      '/images/img-review-3.png',
-    ],
-    username: 'leechunsik',
-    comment:
-      '처음 방문해 봤는데 생각보다 만족스러웠어요. 공간 디자인도 깔끔하고, 제품 체험할 수 있는 부분이 특히 좋았어요. 다만 사람이 좀 많아서 한두 곳은 dsf 만족스러웠 만족스러',
-    likes: 1,
-  },
-  {
-    id: 2,
-    popupName: '오둥이의 아르바이트',
-    popupAddress: '서울 서초구',
-    rating: 4.0,
-    date: '24.10.19',
-    images: [
-      '/images/img-review-1.png',
-      '/images/img-review-2.png',
-      '/images/img-review-3.png',
-      '/images/img-review-3.png',
-    ],
-    username: 'leechunsik',
-    comment:
-      '처음 방문해 봤는데 생각보다 만족스러웠어요. 공간 디자인도 깔끔하고, 제품 체험할 수 있는 부분이 특히 좋았어요. 다만 사람이 좀 많아서 한두 곳은 dsf 만족스러웠 만족스러',
-    likes: 1,
-  },
-  {
-    id: 3,
-    popupName: '오둥이의 아르바이트',
-    popupAddress: '서울 서초구',
-    rating: 4.0,
-    date: '24.10.19',
-    images: [
-      '/images/img-review-1.png',
-      '/images/img-review-2.png',
-      '/images/img-review-3.png',
-      '/images/img-review-3.png',
-    ],
-    username: 'leechunsik',
-    comment:
-      '처음 방문해 봤는데 생각보다 만족스러웠어요. 공간 디자인도 깔끔하고, 제품 체험할 수 있는 부분이 특히 좋았어요. 다만 사람이 좀 많아서 한두 곳은 dsf 만족스러웠 만족스러',
-    likes: 1,
-  },
-  {
-    id: 4,
-    popupName: '오둥이의 아르바이트',
-    popupAddress: '서울 서초구',
-    rating: 4.0,
-    date: '24.10.19',
-    images: [
-      '/images/img-review-1.png',
-      '/images/img-review-2.png',
-      '/images/img-review-3.png',
-      '/images/img-review-3.png',
-    ],
-    username: 'leechunsik',
-    comment:
-      '처음 방문해 봤는데 생각보다 만족스러웠어요. 공간 디자인도 깔끔하고, 제품 체험할 수 있는 부분이 특히 좋았어요. 다만 사람이 좀 많아서 한두 곳은 dsf 만족스러웠 만족스러',
-    likes: 1,
-  },
-];

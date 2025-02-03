@@ -1,11 +1,12 @@
 'use client';
 
 import { ArrowRightSmall } from '@/public';
+import { getReviewList, getScrapList } from '@/src/entities';
 import { Hr, SecondaryButton, Title } from '@/src/shared';
-import { BottomNavigation, getNewList, getScrapList, MypageHeader, PopupListItem, PopupSlider } from '@/src/widgets';
+import { BottomNavigation, MypageHeader, PopupListItem, PopupSlider } from '@/src/widgets';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
-import { useQuery } from 'react-query';
+import React from 'react';
+import { useQueries, useQuery } from 'react-query';
 import { useLoginStore, useUserInfo } from 'store/login/loginStore';
 
 type Props = {};
@@ -17,9 +18,18 @@ const Page = (props: Props) => {
   const { userInfoData } = useUserInfo();
   const { token } = useLoginStore();
 
-  const { data, error, isLoading } = useQuery(['getScrapListCount'], () => getScrapList(token!), {
-    enabled: !!token,
-  });
+  const queries = useQueries([
+    {
+      queryKey: ['getScrapListCount'],
+      queryFn: () => getScrapList(token!),
+      enabled: !!token,
+    },
+    {
+      queryKey: ['getReviewListCount'],
+      queryFn: () => getReviewList(token!),
+      enabled: !!token,
+    },
+  ]);
 
   const reviewsClickHandler = () => {
     router.push('/mypage/reviews');
@@ -41,8 +51,6 @@ const Page = (props: Props) => {
       router.push('/mypage/popupstore/online/history');
     }
   };
-
-  const reviewsCount = 7;
 
   return (
     <div className="h-full">
@@ -95,7 +103,7 @@ const Page = (props: Props) => {
               <Title
                 category={101}
                 text1="저장한 팝업"
-                count={isLoading ? 0 : data?.length}
+                count={queries[0].isLoading ? 0 : queries[0].data?.length}
                 typography="h3"
                 showArrow={false}
               />
@@ -108,7 +116,12 @@ const Page = (props: Props) => {
         <Hr variant="hairline" />
       </div>
       <div className="mt-20">
-        <Title category={102} text1="작성한 리뷰" count={reviewsCount} typography="h3" />
+        <Title
+          category={102}
+          text1="작성한 리뷰"
+          count={queries[1].isLoading ? 0 : queries[1].data?.length}
+          typography="h3"
+        />
       </div>
       {/* <div
         className="flex items-center justify-between w-full px-16 mt-20"
