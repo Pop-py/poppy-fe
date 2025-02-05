@@ -23,6 +23,7 @@ export interface PopupList extends Error {
 
 export interface PopupListItem {
   id: number;
+  scrapId: number;
   name: string;
   description: string;
   location: string;
@@ -59,6 +60,7 @@ export interface PopupListItem {
   blogUrl: string;
   scrapCount: number;
   isAlmostFull: boolean;
+  thumbnail: string;
 }
 
 export interface ScrapListItem {

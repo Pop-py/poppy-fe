@@ -20,7 +20,9 @@ const Page = () => {
     },
     {
       queryKey: ['getActivityNotices'],
-      queryFn: () => getActivityNotices(userInfoData.userId, token!),
+      queryFn: () => getActivityNotices(token!, userInfoData.userId),
+      // queryFn: () => getActivityNotices(token!),
+
       // enabled: !!token && !!userInfoData.userId,
     },
   ]);

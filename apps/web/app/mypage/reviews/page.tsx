@@ -181,19 +181,13 @@ const Page = () => {
                   </div>
 
                   {/* Image Section */}
-                  <div>
-                    <div className="flex gap-x-[2px] overflow-x-scroll">
+                  <div className="overflow-x-auto">
+                    <div className="flex gap-x-[2px]">
                       {review.imageUrls.map((imageSrc, index, arr) => (
                         <div
                           key={`RVIMG_${index}`}
-                          className={`relative h-[160px] w-[160px] ${index === 0 ? 'ml-16' : ''} ${index + 1 === arr.length ? 'mr-16' : ''}`}>
-                          <Image
-                            layout="fill"
-                            src={imageSrc}
-                            alt={`review-${index}`}
-                            // style={{ marginLeft: index === 0 ? 16 : 0, marginRight: index + 1 === arr.length ? 16 : 0 }}
-                            className={`object-cover`}
-                          />
+                          className={`relative h-[160px] w-[160px] flex-shrink-0 ${index === 0 ? 'ml-16' : ''} ${index + 1 === arr.length ? 'mr-16' : ''}`}>
+                          <Image layout="fill" src={imageSrc} alt={`review-${index}`} className={`object-cover`} />
                         </div>
                       ))}
                     </div>

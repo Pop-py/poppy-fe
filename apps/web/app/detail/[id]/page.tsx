@@ -59,6 +59,13 @@ export default function Page() {
   const queryClient = useQueryClient();
   const [waitingDialogOpen, setWaitingDialogOpen] = useState(false);
 
+  const sortOptionsForReviews = [
+    { value: 'RECENT', label: '최근 등록순' },
+    { value: 'LIKES', label: '좋아요 많은순' },
+    { value: 'RATING_HIGH', label: '별점 높은순' },
+    { value: 'RATING_LOW', label: '별점 낮은순' },
+  ];
+
   const { recommandData, setRecommandData, selectedTab, setSelectedTab, selectedValue, setSelectedValue } =
     useDetailStore();
   useEffect(() => {
@@ -531,6 +538,7 @@ export default function Page() {
           onClose={() => setIsSortSheetOpen(false)}
           sortType={sortType}
           onSortChange={handleSortChange}
+          sortOptions={sortOptionsForReviews}
         />
         <AlertDialog open={waitingDialogOpen}>
           <AlertDialogContent>
