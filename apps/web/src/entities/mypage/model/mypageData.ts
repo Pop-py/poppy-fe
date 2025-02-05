@@ -7,5 +7,7 @@ export interface ReviewListItem {
   userName: string;
   popupStoreId: number;
   popupStoreName: string;
+  thumbnailUrl: string;
+  location: string;
   date: string;
 }
