@@ -34,12 +34,23 @@ export default function Page() {
         userNickname: res.data.nickname,
       });
 
+      if (typeof window !== 'undefined' && window.ReactNativeWebView) {
+        window.ReactNativeWebView.postMessage('please send me fcm token!');
+      }
+
       router.push('/home');
     },
     onError: (error: any) => {
       console.error('Failed to fetch login token:', error.message);
     },
   });
+
+  React.useEffect(() => {
+    // RN에서 웹으로 데이터를 전송했을때 message이벤트가 실행됩니다.
+    document.addEventListener('message', e => {
+      console.log(e);
+    });
+  }, []);
 
   return (
     <div className="flex flex-col items-center w-full h-full">
