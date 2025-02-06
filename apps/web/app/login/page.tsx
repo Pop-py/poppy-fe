@@ -12,7 +12,7 @@ import { useLoginStore, useUserInfo } from 'store/login/loginStore';
 export default function Page() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { setToken, setRefreshToken } = useLoginStore();
+  const { token, setToken, setRefreshToken } = useLoginStore();
   const { setUserInfo, userInfoData } = useUserInfo();
   const code = searchParams.get('code'); // code state
 
@@ -48,7 +48,17 @@ export default function Page() {
   React.useEffect(() => {
     // RN에서 웹으로 데이터를 전송했을때 message이벤트가 실행됩니다.
     document.addEventListener('message', e => {
-      alert(e.data);
+      if (e.data.type === 'FCMTOKEN' && userInfoData.userId && token) {
+        saveFCMToken(e.data.payload, userInfoData.userId, token).then(res => {
+          if (res) console.log(`FCM Token[${e.data.payload}] has been saved`);
+        });
+      } else {
+        console.error(
+          'Failed to save FCM token. Either user ID or token is missing.',
+          `userId: ${userInfoData.userId}`,
+          `accessToken: ${token}`,
+        );
+      }
     });
   }, []);
 
