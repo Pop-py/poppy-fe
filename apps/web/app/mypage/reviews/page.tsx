@@ -87,7 +87,7 @@ const Page = () => {
             <span className="ml-4 text-gray-500 text-b2">최근 등록순</span>
           </div>
         </div>
-        <div className="flex flex-col gap-y-[52px]">
+        <div className="flex flex-col gap-y-[20px] mt-16">
           {isLoading
             ? Array.from({ length: 5 }, (_, idx) => (
                 <div className="flex flex-col mt-16 gap-y-8" key={`SKELETON_${idx}`}>
@@ -142,9 +142,9 @@ const Page = () => {
                 </div>
               ))
             : data?.map(review => (
-                <div key={review.id}>
+                <div key={review.id} className="mr-16">
                   {/* Popup information */}
-                  <div className="flex items-center justify-between px-16">
+                  <div className="flex items-center justify-between px-16 ">
                     <div className="flex gap-x-8">
                       <div>
                         <Image
@@ -211,11 +211,11 @@ const Page = () => {
       <BottomSheet open={isBottomSheetOpen} onOpenChange={setIsBottomSheetOpen}>
         <BottomSheetContent aria-describedby="bottomSheetContent" className="px-0">
           <BottomSheetHeader className="py-16 border-b border-gray-100">
-            <BottomSheetTitle>정렬</BottomSheetTitle>
+            <BottomSheetTitle>리뷰</BottomSheetTitle>
           </BottomSheetHeader>
           <div className="flex flex-col">
-            <div className="h-48 text-gray-800 text-b1">수정하기</div>
-            <div className="h-48 text-gray-800 text-b1" onClick={() => setIsDialogOpen(true)}>
+            <div className="flex items-center h-48 ml-16 text-gray-800 text-b1">수정하기</div>
+            <div className="flex items-center h-48 ml-16 text-gray-800 text-b1" onClick={() => setIsDialogOpen(true)}>
               삭제하기
             </div>
           </div>

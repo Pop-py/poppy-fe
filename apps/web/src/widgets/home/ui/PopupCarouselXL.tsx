@@ -4,7 +4,7 @@ import React from 'react';
 import { type CarouselApi, Carousel, CarouselContent, CarouselItem } from '@/src/shared/ui/carousel';
 
 import { ArrowRightSmall } from '@/public';
-import Image from "next/legacy/image";
+import Image from 'next/legacy/image';
 import { useQuery } from 'react-query';
 import { getHotCategoryList } from '..';
 import { CarouselSkeleton, Skeleton, Title } from '@/src/shared';
@@ -80,7 +80,10 @@ const PopupCarouselXL = (props: Props) => {
                     <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-b from-transparent to-black/80">
                       <div className="absolute bottom-0">
                         <div className="px-16 mb-8 text-white text-h1">{item.name}</div>
-                        <div className="px-16 mb-16 text-white text-b3">{item.description}</div>
+                        <div
+                          className="px-16 mb-16 text-white text-b3"
+                          dangerouslySetInnerHTML={{ __html: item.description }}
+                        />
                       </div>
                     </div>
                   </div>

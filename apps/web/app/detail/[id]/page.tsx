@@ -86,7 +86,15 @@ export default function Page() {
 
   const handleCopy = () => {
     if (addressRef.current) {
-      navigator.clipboard.writeText(addressRef.current.textContent || '');
+      const textToCopy = addressRef.current.textContent || '';
+      navigator.clipboard
+        .writeText(textToCopy)
+        .then(() => {
+          alert('주소가 복사되었습니다!');
+        })
+        .catch(() => {
+          alert('복사에 실패했습니다. 다시 시도해주세요.');
+        });
     }
   };
 
@@ -188,6 +196,13 @@ export default function Page() {
       });
     }
   };
+
+  const status = data
+    ? operations(
+        { hour: data.openingTime?.hour ?? 0, minute: data.openingTime?.minute ?? 0 },
+        { hour: data.closingTime?.hour ?? 0, minute: data.closingTime?.minute ?? 0 },
+      )
+    : 'closed';
 
   return (
     <>
@@ -368,7 +383,7 @@ export default function Page() {
                       </div>
                       {/* pop list */}
                       <div className="flex flex-col w-full gap-y-12">
-                        <Title text1="지금 많이 찾는 팝업" showArrow={false} />
+                        <Title text1="비슷한 팝업 추천" showArrow={false} />
                         <PopupSlider
                           variant="list"
                           queryKey={`similarPopup-${id}`}
