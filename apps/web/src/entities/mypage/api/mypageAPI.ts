@@ -1,7 +1,7 @@
 import { PopupListItem } from '@/src/widgets';
 import { ReviewListItem } from '..';
 
-export const getScrapList = async (token: string, sortType: string): Promise<Array<PopupListItem>> => {
+export const getScrapList = async (token: string, sortType?: string): Promise<Array<PopupListItem>> => {
   const options = {
     method: 'GET',
     headers: {
