@@ -53,3 +53,27 @@ export const patchNickName = async (inputValue: string, code: string) => {
     throw error;
   }
 };
+
+export const saveFCMToken = async (fcmToken: string, userId: number, accessToken: string): Promise<boolean> => {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_CLIENT_URL}/users/${userId}/fcm-token`, {
+      method: 'PATCH',
+      headers: {
+        Authorization: 'Bearer ' + accessToken,
+      },
+      body: JSON.stringify({ fcmToken: fcmToken }),
+    });
+
+    const result = await res.json();
+
+    if (result.code === 200) {
+      return true;
+    }
+
+    // Handle API error case
+    throw new Error(result.errorMessage || 'An unknown error occurred.');
+  } catch (error) {
+    console.error('Error:', error);
+    throw error;
+  }
+};

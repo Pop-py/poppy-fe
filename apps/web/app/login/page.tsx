@@ -4,7 +4,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/legacy/image';
 import Link from 'next/link';
 import { useQuery } from 'react-query';
-import { getLoginToken } from '@/src/widgets/login';
+import { getLoginToken, saveFCMToken } from '@/src/widgets/login';
 
 import React from 'react';
 import { useLoginStore, useUserInfo } from 'store/login/loginStore';
@@ -35,7 +35,7 @@ export default function Page() {
       });
 
       if (typeof window !== 'undefined' && window.ReactNativeWebView) {
-        window.ReactNativeWebView.postMessage('please send me fcm token!');
+        window.ReactNativeWebView.postMessage('GET_FCMTOKEN');
       }
 
       router.push('/home');
