@@ -21,7 +21,7 @@ const Page = (props: Props) => {
   const queries = useQueries([
     {
       queryKey: ['getScrapListCount'],
-      queryFn: () => getScrapList(token!),
+      queryFn: () => getScrapList(token!, 'RECENT_SAVED'),
       enabled: !!token,
     },
     {
@@ -106,7 +106,11 @@ const Page = (props: Props) => {
                 count={queries[0].isLoading ? 0 : queries[0].data?.length}
                 typography="h3"
               />
-              <PopupSlider variant="smlist" queryKey="getSaveList" queryFn={() => getScrapList(token)} />
+              <PopupSlider
+                variant="smlist"
+                queryKey="getSaveList"
+                queryFn={() => getScrapList(token, 'RECENT_SAVED')}
+              />
             </>
           )}
         </div>

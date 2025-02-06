@@ -304,7 +304,7 @@ const Page = (props: Props) => {
       <div className="absolute flex-col top-[38px] left-0 w-full px-16 z-10 flex items-center gap-2 ">
         <Input
           variantType="search"
-          placeholder="팜업스토어명 검색"
+          placeholder="팝업스토어명 검색"
           className="flex-grow"
           value={searchQuery}
           onChange={e => setSearchQuery(e.target.value)}

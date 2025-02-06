@@ -23,6 +23,7 @@ export interface PopupList extends Error {
 
 export interface PopupListItem {
   id: number;
+  popupStoreId: number;
   scrapId: number;
   name: string;
   description: string;
