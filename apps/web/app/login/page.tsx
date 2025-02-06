@@ -48,7 +48,7 @@ export default function Page() {
   React.useEffect(() => {
     // RN에서 웹으로 데이터를 전송했을때 message이벤트가 실행됩니다.
     document.addEventListener('message', e => {
-      console.log(e);
+      alert(e.data);
     });
   }, []);
 

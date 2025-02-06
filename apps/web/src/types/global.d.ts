@@ -6,4 +6,8 @@ declare global {
       postMessage: (message: string) => void;
     };
   }
+
+  interface Event {
+    data: string;
+  }
 }
