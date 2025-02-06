@@ -25,7 +25,6 @@ export default function Page() {
   const { data, error, isLoading } = useQuery(['loginToken', code], () => getLoginToken(code || ''), {
     enabled: !!code, // code가 있을 때만 실행
     onSuccess: res => {
-      console.log(res.data.userId);
       setToken(res.data.accessToken);
       setRefreshToken(res.data.refreshToken);
       setUserInfo({
@@ -46,7 +45,6 @@ export default function Page() {
   });
 
   React.useEffect(() => {
-    // RN에서 웹으로 데이터를 전송했을때 message이벤트가 실행됩니다.
     document.addEventListener('message', e => {
       if (e.data.type === 'FCMTOKEN' && userInfoData.userId && token) {
         saveFCMToken(e.data.payload, userInfoData.userId, token).then(res => {
