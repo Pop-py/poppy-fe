@@ -8,6 +8,9 @@ declare global {
   }
 
   interface Event {
-    data: string;
+    data: {
+      type: string;
+      payload: string;
+    };
   }
 }
