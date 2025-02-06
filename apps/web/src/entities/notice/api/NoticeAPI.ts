@@ -36,18 +36,16 @@ export const getNoticeDetail = async (id: string): Promise<NoticeDetail> => {
   }
 };
 
-export const getActivityNotices = async (userId: number, token: string): Promise<Array<ActivityListItem>> => {
+export const getActivityNotices = async (accessToken: string, userId: number): Promise<Array<ActivityListItem>> => {
   const options = {
     method: 'GET',
     headers: {
-      Authorization:
-        'Bearer ' +
-        'eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJub2VsNzE0NUBnbWFpbC5jb20iLCJ1c2VySWQiOjUsInVzZXJuYW1lIjoibm9lbDcxNDVAZ21haWwuY29tIiwicm9sZSI6IlJPTEVfVVNFUiIsImlhdCI6MTczODQ3NDY4NCwiZXhwIjoxNzM4NDc2NDg0fQ.IkN2dLFtf1IzVa0dj_9KhvT1a5IYffPbkfiidMI7BPbtUjYIPNA13LtZ9w8NJqDG',
+      Authorization: 'Bearer ' + accessToken,
     },
   };
 
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_CLIENT_URL}/users/${5}/notifications`, options);
+    const response = await fetch(`${process.env.NEXT_PUBLIC_CLIENT_URL}/users/${userId}/notifications`, options);
     const result = await response.json();
 
     console.log(result.data);

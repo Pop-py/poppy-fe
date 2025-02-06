@@ -3,14 +3,20 @@ import { BottomSheet, BottomSheetContent, BottomSheetTitle, RadioGroupItem, Radi
 import { useState } from 'react';
 import { useQuery } from 'react-query';
 
+type SortOption = {
+  value: string;
+  label: string;
+};
+
 type sortSheetProps = {
   isOpen: boolean;
   onClose: () => void;
   sortType: string;
   onSortChange: (value: string) => void;
+  sortOptions: SortOption[]; // 정렬 옵션 배열
 };
 
-export const SortSheet = ({ isOpen, onClose, sortType, onSortChange }: sortSheetProps) => {
+export const SortSheet = ({ isOpen, onClose, sortType, onSortChange, sortOptions }: sortSheetProps) => {
   return (
     <BottomSheet open={isOpen} onOpenChange={onClose}>
       <BottomSheetContent className="px-16">
@@ -20,18 +26,11 @@ export const SortSheet = ({ isOpen, onClose, sortType, onSortChange }: sortSheet
           <hr className="w-full mt-16 border-t border-gray-100" />
         </div>
         <RadioGroup className="flex-col w-full px-16 pt-[22px]" onValueChange={onSortChange} value={sortType}>
-          <div className="flex ">
-            <RadioGroupItem size="lg" value="RECENT" label="최근 등록순" />
-          </div>
-          <div className="flex pt-14">
-            <RadioGroupItem size="lg" value="LIKES" label="좋아요 많은순" />
-          </div>
-          <div className="flex pt-14">
-            <RadioGroupItem size="lg" value="RATING_HIGH" label="별점 높은순" />
-          </div>
-          <div className="flex pb-14 pt-14">
-            <RadioGroupItem size="lg" value="RATING_LOW" label="별점 낮은순" />
-          </div>
+          {sortOptions.map(option => (
+            <div key={option.value} className="flex pt-14">
+              <RadioGroupItem size="lg" value={option.value} label={option.label} />
+            </div>
+          ))}
         </RadioGroup>
       </BottomSheetContent>
     </BottomSheet>

@@ -30,6 +30,12 @@ import { StarActive } from '@/public';
 import { toast } from '@/src/shared/hooks/use-toast';
 
 const Page = () => {
+  const [isClient, setIsClient] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   const { token } = useLoginStore();
 
   const [isBottomSheetOpen, setIsBottomSheetOpen] = React.useState(false);
@@ -64,6 +70,8 @@ const Page = () => {
     }
     setIsBottomSheetOpen(false);
   };
+
+  if (!isClient) return <div></div>;
 
   return (
     <div className="flex flex-col h-full">
@@ -142,14 +150,14 @@ const Page = () => {
                         <Image
                           width={40}
                           height={40}
-                          src={'https://placehold.co/500/webp'}
+                          src={review.thumbnailUrl}
                           alt={`review-${review.id}`}
                           className="object-cover rounded-2"
                         />
                       </div>
                       <div className="flex flex-col gap-y-2">
                         {/* <div className="text-gray-400 text-b5">{review.popupAddress}</div> */}
-                        <div className="text-gray-400 text-b5">임시 주소</div>
+                        <div className="text-gray-400 text-b5">{review.location}</div>
                         <div className="text-gray-900 text-h4">{review.popupStoreName}</div>
                       </div>
                     </div>
@@ -173,17 +181,14 @@ const Page = () => {
                   </div>
 
                   {/* Image Section */}
-                  <div>
-                    <div className="flex gap-x-[2px] overflow-auto">
+                  <div className="overflow-x-auto">
+                    <div className="flex gap-x-[2px]">
                       {review.imageUrls.map((imageSrc, index, arr) => (
-                        <Image
-                          key={index}
-                          width={160}
-                          height={160}
-                          src={imageSrc}
-                          alt={`review-${index}`}
-                          className={`w-[160px] h-[160px] object-cover ${index === 0 ? 'pl-16' : null} ${index + 1 === arr.length ? 'pr-16' : null}`}
-                        />
+                        <div
+                          key={`RVIMG_${index}`}
+                          className={`relative h-[160px] w-[160px] flex-shrink-0 ${index === 0 ? 'ml-16' : ''} ${index + 1 === arr.length ? 'mr-16' : ''}`}>
+                          <Image layout="fill" src={imageSrc} alt={`review-${index}`} className={`object-cover`} />
+                        </div>
                       ))}
                     </div>
                   </div>
@@ -197,6 +202,7 @@ const Page = () => {
                   <div className="flex w-full justify-end mt-[4px] px-[16px]">
                     <LikeIconButton variant="inactive" value={review.likes} />
                   </div>
+                  <Hr variant="hairline" className="my-24" />
                 </div>
               ))}
         </div>

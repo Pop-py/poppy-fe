@@ -1,16 +1,19 @@
 import { PopupListItem } from '@/src/widgets';
 import { ReviewListItem } from '..';
 
-export const getScrapList = async (token: string): Promise<Array<PopupListItem>> => {
+export const getScrapList = async (token: string, sortType?: string): Promise<Array<PopupListItem>> => {
   const options = {
-    method: 'POST',
+    method: 'GET',
     headers: {
       Authorization: 'Bearer ' + token,
     },
   };
 
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_CLIENT_URL}/scraps?sortType=RECENT_SAVED`, options);
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_CLIENT_URL}/scraps?sortType=${sortType || 'RECENT_SAVED'}`,
+      options,
+    );
     const result = await response.json();
 
     if (result && result.data) {
@@ -95,6 +98,30 @@ export const deleteReview = async (reviewId: number, token: string): Promise<boo
 
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_CLIENT_URL}/reviews/${reviewId}`, options);
+    const result = await response.json();
+
+    if (result.code === 200) {
+      return true;
+    }
+
+    return false;
+  } catch (e) {
+    throw new Error('Failed to fetch data');
+  }
+};
+
+export const deleteScraps = async (scrapIds: number[], token: string): Promise<boolean> => {
+  const options = {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + token,
+    },
+    body: JSON.stringify({ scrapIds }),
+  };
+
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_CLIENT_URL}/scraps`, options);
     const result = await response.json();
 
     if (result.code === 200) {

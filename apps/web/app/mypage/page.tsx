@@ -105,7 +105,6 @@ const Page = (props: Props) => {
                 text1="저장한 팝업"
                 count={queries[0].isLoading ? 0 : queries[0].data?.length}
                 typography="h3"
-                showArrow={false}
               />
               <PopupSlider variant="smlist" queryKey="getSaveList" queryFn={() => getScrapList(token)} />
             </>
