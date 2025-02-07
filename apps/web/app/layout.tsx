@@ -8,7 +8,7 @@ import React from 'react';
 import { toast } from '@/src/shared/hooks/use-toast';
 import * as StompJs from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
-import { useLoginStore } from 'store/login/loginStore';
+import { useLoginStore, useUserInfo } from 'store/login/loginStore';
 
 const pretendard = localFont({
   src: '../public/fonts/PretendardVariable.woff2',
@@ -20,29 +20,38 @@ const pretendard = localFont({
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const client = React.useRef<StompJs.Client>(null);
   const { token } = useLoginStore();
+  const { userInfoData } = useUserInfo();
   console.log('token: ', token);
 
   React.useEffect(() => {
     const wsUrl = process.env.NEXT_PUBLIC_WEBSOCKET_URL || '';
 
+    console.log('wsUrl: ', wsUrl);
+
     const connect = () => {
       console.log('Connecting...');
       client.current = new StompJs.Client({
         webSocketFactory: () =>
-          new SockJS('https://pop-py.duckdns.org/ws', null, {
+          new SockJS(wsUrl, null, {
             transports: ['websocket', 'xhr-streaming', 'xhr-polling'],
           }),
-        debug: msg => {
-          console.log(msg);
-        },
         connectHeaders: {
           Authorization: `${token}`,
         },
         reconnectDelay: 10000,
         onConnect: () => {
-          console.log('connected');
-          // subscribeError();
-          // subscribe();
+          if (!client.current) return;
+          client.current.subscribe(`/user/${userInfoData.userId}/queue/notifications`, function (message) {
+            // 알림 수신 시 처리
+            const notification = JSON.parse(message.body);
+            console.log('Received notification:', notification);
+            // toast({
+            //   variant: 'informative',
+            //   title: '',
+            //   description: '',
+            // });
+            // 여기서 UI 업데이트 등 필요한 처리
+          });
         },
         onWebSocketError: error => {
           console.log('Error with websocket', error);
@@ -55,8 +64,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       console.log('Activating...');
       client.current.activate();
     };
-    if (token) connect();
-  }, [token]);
+    if (token && userInfoData.userId > 0) connect();
+  }, [token, userInfoData.userId]);
   return (
     <ReactQueryProvider>
       <html lang="en">
