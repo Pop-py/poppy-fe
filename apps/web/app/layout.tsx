@@ -28,7 +28,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     const connect = () => {
       console.log('Connecting...');
       client.current = new StompJs.Client({
-        webSocketFactory: () => new SockJS('https://pop-py.duckdns.org/ws'),
+        webSocketFactory: () =>
+          new SockJS('https://pop-py.duckdns.org/ws', null, {
+            transports: ['websocket', 'xhr-streaming', 'xhr-polling'],
+          }),
         debug: msg => {
           console.log(msg);
         },
