@@ -36,7 +36,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           console.log(msg);
         },
         connectHeaders: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `${token}`,
         },
         reconnectDelay: 10000,
         onConnect: () => {
