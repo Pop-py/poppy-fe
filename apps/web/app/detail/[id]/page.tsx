@@ -187,6 +187,11 @@ export default function Page() {
         })
         .catch(err => {
           console.log('err:' + err);
+          toast({
+            variant: 'destructive',
+            title: '대기 등록 불가',
+            description: err,
+          });
         });
     } else {
       toast({
@@ -209,7 +214,7 @@ export default function Page() {
       <div className="flex flex-col items-center justify-between w-full h-full">
         {/* header  */}
         <header className="absolute top-0 left-0 flex w-full px-[16px] justify-between h-[48px] items-center z-10">
-          <IconButton className={``} icon={'ic-back-white'} size={'md'} onClick={() => router.back()} />
+          <IconButton className={``} icon={'ic-back-white'} size={'md'} onClick={() => router.push('/home')} />
           <IconButton className={``} icon={'ic-share'} size={'md'} onClick={() => {}} />
         </header>
         {/* content area */}
