@@ -21,15 +21,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const client = React.useRef<StompJs.Client>(null);
   const { token } = useLoginStore();
   const { userInfoData } = useUserInfo();
-  console.log('token: ', token);
 
   React.useEffect(() => {
     const wsUrl = process.env.NEXT_PUBLIC_WEBSOCKET_URL || '';
 
-    console.log('wsUrl: ', wsUrl);
-
     const connect = () => {
-      console.log('Connecting...');
+      console.log('[WebSocket]', 'Connecting...');
       client.current = new StompJs.Client({
         webSocketFactory: () =>
           new SockJS(wsUrl, null, {
@@ -40,11 +37,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         },
         reconnectDelay: 10000,
         onConnect: () => {
-          console.log('Subscribing...');
+          console.log('[WebSocket]', 'Subscribing...');
           client.current?.subscribe(`/user/${userInfoData.userId}/queue/notifications`, function (message) {
             // 알림 수신 시 처리
             const notification = JSON.parse(message.body);
-            console.log('Received notification:', notification);
+            console.log('[WebSocket]', 'Received notification:', notification);
             // toast({
             //   variant: 'informative',
             //   title: '',
@@ -54,14 +51,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           });
         },
         onWebSocketError: error => {
-          console.log('Error with websocket', error);
+          console.log('[WebSocket]', 'Error with websocket', error);
         },
         onStompError: frame => {
-          console.dir(`Broker reported error: ${frame.headers.message}`);
-          console.dir(`Additional details: ${frame}`);
+          console.dir('[WebSocket]', `Broker reported error: ${frame.headers.message}`);
+          console.dir('[WebSocket]', `Additional details: ${frame}`);
         },
       });
-      console.log('Activating...');
+      console.log('[WebSocket]', 'Activating...');
       client.current.activate();
     };
     if (token && userInfoData.userId > 0) connect();

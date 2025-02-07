@@ -46,7 +46,6 @@ interface UseUserInfoStore {
 export const useUserInfo = create<UseUserInfoStore>(set => ({
   userInfoData: { userId: 0, userEmail: '' }, // Initialize with required property
   setUserInfo: data => {
-    console.log('Setting user info data:', data); // 데이터 설정 시 콘솔
     set({ userInfoData: data });
   },
 }));
