@@ -37,14 +37,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         },
         reconnectDelay: 10000,
         onConnect: frame => {
+          console.log('[WebSocket]', 'Subscribing...');
           console.log('[+] headers >>', frame.headers);
           console.log('[+] body >>', frame.body);
           console.log('[+] command >>', frame.command);
-          console.log('[WebSocket]', 'Subscribing...');
           client.current?.subscribe(`/user/${userInfoData.userId}/queue/notifications`, function (message) {
+            console.log('[WebSocket]', 'Received message:', message);
             // 알림 수신 시 처리
             const notification = JSON.parse(message.body);
             console.log('[WebSocket]', 'Received notification:', notification);
+            console.log('[WebSocket]', 'Received notification:', message.body);
             // toast({
             //   variant: 'informative',
             //   title: '',
@@ -59,6 +61,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         onStompError: frame => {
           console.dir('[WebSocket]', `Broker reported error: ${frame.headers.message}`);
           console.dir('[WebSocket]', `Additional details: ${frame}`);
+        },
+        onDisconnect: frame => {
+          console.log('[WebSocket]', 'Disconnected.');
+          console.log('[+] headers >>', frame.headers);
+          console.log('[+] body >>', frame.body);
+          console.log('[+] command >>', frame.command);
         },
       });
       console.log('[WebSocket]', 'Activating...');
