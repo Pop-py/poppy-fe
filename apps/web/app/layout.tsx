@@ -36,7 +36,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           Authorization: `${token}`,
         },
         reconnectDelay: 10000,
-        onConnect: () => {
+        onConnect: frame => {
+          console.log('[+] headers >>', frame.headers);
+          console.log('[+] body >>', frame.body);
+          console.log('[+] command >>', frame.command);
           console.log('[WebSocket]', 'Subscribing...');
           client.current?.subscribe(`/user/${userInfoData.userId}/queue/notifications`, function (message) {
             // 알림 수신 시 처리
