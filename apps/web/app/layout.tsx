@@ -43,7 +43,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           console.log('[+] command >>', frame.command);
           // /user/${userInfoData.userId}/queue/notifications
           // /user/queue/notifications
-          client.current?.subscribe(`/user/${userInfoData.userId}/queue/notifications`, function (message) {
+          client.current?.subscribe(`/user/queue/notifications`, function (message) {
             console.log('[WebSocket]', 'Received message:', message);
             // 알림 수신 시 처리
             const notification = JSON.parse(message.body);
