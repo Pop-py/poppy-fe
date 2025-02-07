@@ -40,8 +40,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         },
         reconnectDelay: 10000,
         onConnect: () => {
-          if (!client.current) return;
-          client.current.subscribe(`/user/${userInfoData.userId}/queue/notifications`, function (message) {
+          console.log('Subscribing...');
+          client.current?.subscribe(`/user/${userInfoData.userId}/queue/notifications`, function (message) {
             // 알림 수신 시 처리
             const notification = JSON.parse(message.body);
             console.log('Received notification:', notification);
