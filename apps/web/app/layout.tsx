@@ -41,20 +41,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           console.log('[+] headers >>', frame.headers);
           console.log('[+] body >>', frame.body);
           console.log('[+] command >>', frame.command);
-          // /user/${userInfoData.userId}/queue/notifications
-          // /user/queue/notifications
           client.current?.subscribe(`/user/queue/notifications`, function (message) {
-            console.log('[WebSocket]', 'Received message:', message);
             // 알림 수신 시 처리
             const notification = JSON.parse(message.body);
-            console.log('[WebSocket]', 'Received notification:', notification);
-            console.log('[WebSocket]', 'Received notification:', message.body);
-            // toast({
-            //   variant: 'informative',
-            //   title: '',
-            //   description: '',
-            // });
-            // 여기서 UI 업데이트 등 필요한 처리
+            toast({
+              variant: 'informative',
+              title: notification.popupStoreName,
+              description: notification.message,
+            });
           });
         },
         onWebSocketError: error => {
