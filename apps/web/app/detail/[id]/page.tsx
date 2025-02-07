@@ -187,6 +187,11 @@ export default function Page() {
         })
         .catch(err => {
           console.log('err:' + err);
+          toast({
+            variant: 'destructive',
+            title: '대기 등록 불가',
+            description: err,
+          });
         });
     } else {
       toast({
