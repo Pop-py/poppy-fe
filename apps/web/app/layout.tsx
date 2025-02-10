@@ -55,11 +55,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           client.current?.subscribe('/topic/notifications', message => {
             const notification = JSON.parse(message.body);
             console.log('[WebSocket]', 'Received notification:', notification);
-            // toast({
-            //   variant: 'informative',
-            //   title: notification.popupStoreName,
-            //   description: notification.message,
-            // })
+            toast({
+              variant: 'informative',
+              title: '공지 사항 알림',
+              description: notification.message,
+            });
           });
         },
         onWebSocketError: error => {
