@@ -41,6 +41,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           console.log('[+] headers >>', frame.headers);
           console.log('[+] body >>', frame.body);
           console.log('[+] command >>', frame.command);
+
           client.current?.subscribe(`/user/queue/notifications`, function (message) {
             // 알림 수신 시 처리
             const notification = JSON.parse(message.body);
@@ -49,6 +50,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               title: notification.popupStoreName,
               description: notification.message,
             });
+          });
+
+          client.current?.subscribe('/topic/notifications', message => {
+            const notification = JSON.parse(message.body);
+            console.log('[WebSocket]', 'Received notification:', notification);
+            // toast({
+            //   variant: 'informative',
+            //   title: notification.popupStoreName,
+            //   description: notification.message,
+            // })
           });
         },
         onWebSocketError: error => {
