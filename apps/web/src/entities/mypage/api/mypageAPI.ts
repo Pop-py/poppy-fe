@@ -29,7 +29,7 @@ export const getScrapList = async (token: string, sortType?: string): Promise<Ar
 // 닉네임 변경
 export const changeNickName = async (id: number, newNickname: string, token: string) => {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_CLIENT_URL}/user/${id}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_CLIENT_URL}/users/${id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
