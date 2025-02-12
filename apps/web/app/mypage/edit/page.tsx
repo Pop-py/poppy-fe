@@ -22,6 +22,7 @@ const Page = () => {
     if (token) {
       await changeNickName(userData.userInfoData.userId, nickname.current, token).then(res => {
         if (res && res.code === 200) {
+          userData.setUserInfo({ ...userData.userInfoData, userNickname: nickname.current });
           alert(res.message);
           router.push('/mypage');
         } else {
