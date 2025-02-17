@@ -28,9 +28,9 @@
 
 ## **기술 스택**
 프로젝트에서 사용한 주요 기술을 나열합니다.  
-- **프론트엔드**: React Native, Next.js
-- **CSS**: SCSS, Tailwind, Styled Component
-- **상태 관리**: Redux, Zustand
+- **프론트엔드**: Next.js, React Native
+- **CSS**: TailwindCSS, Shadcn
+- **상태 관리**: Zustand
 - **기타**: Turbo, Expo, Vercel, Jira, Github Actions
 - **패키지 메니저**: yarn
 
