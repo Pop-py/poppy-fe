@@ -31,7 +31,7 @@
 - **프론트엔드**: Next.js, React Native
 - **CSS**: TailwindCSS, Shadcn
 - **상태 관리**: Zustand
-- **기타**: Turbo, Expo, Vercel, Jira, Github Actions
+- **기타**: FCM, TurboRepo, Expo, Vercel, Jira, Github Actions
 - **패키지 메니저**: yarn
 
 ---
